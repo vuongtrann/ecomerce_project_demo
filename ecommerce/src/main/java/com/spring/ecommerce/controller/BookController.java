@@ -21,30 +21,47 @@ public class BookController {
     @GetMapping("/getAll")
     public ResponseEntity <List<Book>> getAllBooks() {
         List<Book> books = bookService.getAllBooks();
-        return new ResponseEntity<>(books, HttpStatus.OK);
+        return new ResponseEntity<>(books, books.size()>0?HttpStatus.OK:HttpStatus.NOT_FOUND);
     }
     @GetMapping("/getBookByID/{bookID}")
-    public ResponseEntity<Book> getBookByID(@PathVariable("bookID") Long bookID) {
-        return new ResponseEntity<>(bookService.getBookById(bookID), HttpStatus.OK);
+    public ResponseEntity<?> getBookByID(@PathVariable("bookID") Long bookID) {
+        try {
+            return new ResponseEntity<>(bookService.getBookById(bookID),HttpStatus.OK);
+        }
+        catch (Exception e) {
+            return new ResponseEntity<>(e.getMessage(),HttpStatus.NOT_FOUND);
+        }
+
     }
     /* add a new book*/
     @PostMapping("/addBook")
     public ResponseEntity<Book> addBook(@RequestBody Book book) {
         Book savedBook = bookService.addBook(book);
-        return new ResponseEntity<>(savedBook, HttpStatus.OK);
+        return new ResponseEntity<>(savedBook, HttpStatus.CREATED);
     }
 
     @PutMapping("/updateBook/{bookID}")
-    public ResponseEntity<Book> updateBook(@PathVariable Long bookID, @RequestBody Book book) {
-        Book savedBook = bookService.updateBook(bookID, book);
-        return new ResponseEntity<>(savedBook, HttpStatus.OK);
+    public ResponseEntity<?> updateBook(@PathVariable Long bookID, @RequestBody Book book) {
+        try {
+            bookService.updateBook(bookID, book);
+            return new ResponseEntity<>("Updated book with ID : "+bookID, HttpStatus.OK);
+        }
+        catch (Exception e){
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+
     }
 
     //dang bug
     @DeleteMapping("deleteBook/{bookID}")
-    public ResponseEntity<Book> deleteBook(@PathVariable Long bookID) {
-        bookService.deleteBook(bookID);
-        return new ResponseEntity<>(HttpStatus.OK);
+    public ResponseEntity<?> deleteBook(@PathVariable Long bookID) {
+        try {
+            bookService.deleteBook(bookID);
+            return new ResponseEntity<>("Deleted Book with ID : "+bookID, HttpStatus.OK);
+        }catch (Exception e){
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+        }
+
     }
 
 }
