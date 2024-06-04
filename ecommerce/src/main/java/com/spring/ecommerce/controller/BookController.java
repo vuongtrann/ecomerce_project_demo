@@ -1,0 +1,43 @@
+package com.spring.ecommerce.controller;
+
+import com.spring.ecommerce.persistence.model.Book;
+import com.spring.ecommerce.services.BookService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+
+@RestController
+@RequestMapping("/api")
+public class BookController {
+
+    @Autowired
+    public BookService bookService;
+
+    @GetMapping("/getAll")
+    public ResponseEntity <List<Book>> getAllBooks() {
+        List<Book> books = bookService.getAllBooks();
+        return new ResponseEntity<>(books, HttpStatus.OK);
+    }
+
+    @PostMapping("/addBook")
+    public ResponseEntity<Book> addBook(@RequestBody Book book) {
+        Book savedBook = bookService.addBook(book);
+        return new ResponseEntity<>(savedBook, HttpStatus.OK);
+    }
+
+    @PutMapping("/updateBook/{bookID}")
+    public ResponseEntity<Book> updateBook(@PathVariable Long bookID, @RequestBody Book book) {
+        Book savedBook = bookService.updateBook(bookID, book);
+        return new ResponseEntity<>(savedBook, HttpStatus.OK);
+    }
+    @DeleteMapping("deleteBook/{bookID}")
+    public ResponseEntity<Book> deleteBook(@PathVariable Long bookID) {
+        bookService.deleteBook(bookID);
+        return new ResponseEntity<>(HttpStatus.valueOf(bookID+"is deleted !!"));
+    }
+
+}
