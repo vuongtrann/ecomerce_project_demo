@@ -6,8 +6,8 @@ import java.util.List;
 
 public interface IBookService {
     public List<Book> getAllBooks();
-    public Book findBookByName(String name);
+    public Book getBookById(Long id);
     public Book addBook(Book book);
     public Book updateBook(Long id,Book book);
-    public String deleteBook(Long id);
+    public void deleteBook(Long id);
 }

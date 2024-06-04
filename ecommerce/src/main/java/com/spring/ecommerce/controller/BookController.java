@@ -8,6 +8,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.LinkedList;
 import java.util.List;
 
 @RestController
@@ -22,7 +23,11 @@ public class BookController {
         List<Book> books = bookService.getAllBooks();
         return new ResponseEntity<>(books, HttpStatus.OK);
     }
-
+    @GetMapping("/getBookByID/{bookID}")
+    public ResponseEntity<Book> getBookByID(@PathVariable("bookID") Long bookID) {
+        return new ResponseEntity<>(bookService.getBookById(bookID), HttpStatus.OK);
+    }
+    /* add a new book*/
     @PostMapping("/addBook")
     public ResponseEntity<Book> addBook(@RequestBody Book book) {
         Book savedBook = bookService.addBook(book);
@@ -34,10 +39,12 @@ public class BookController {
         Book savedBook = bookService.updateBook(bookID, book);
         return new ResponseEntity<>(savedBook, HttpStatus.OK);
     }
+
+    //dang bug
     @DeleteMapping("deleteBook/{bookID}")
     public ResponseEntity<Book> deleteBook(@PathVariable Long bookID) {
         bookService.deleteBook(bookID);
-        return new ResponseEntity<>(HttpStatus.valueOf(bookID+"is deleted !!"));
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
 }

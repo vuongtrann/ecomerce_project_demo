@@ -18,14 +18,15 @@ public class BookService implements IBookService {
     }
 
     @Override
-    public Book findBookByName(String name) {
-        return bookRepository.findByName(name);
+    public Book getBookById(Long id) {
+        return bookRepository.findById(id).get();
     }
 
     @Override
     public Book addBook(Book book) {
         return bookRepository.save(book);
     }
+
 
     @Override
     public Book updateBook(Long id, Book book) {
@@ -36,9 +37,11 @@ public class BookService implements IBookService {
     }
 
     @Override
-    public String deleteBook(Long id) {
+    public void deleteBook(Long id) {
         Book book = bookRepository.findById(id).orElseThrow();
         bookRepository.delete(book);
-        return id + "is deleted..";
     }
+
+
+
 }
